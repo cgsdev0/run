@@ -13,12 +13,12 @@ var (
 	Cyan    = lipgloss.Color("#2AA198")
 	Green   = lipgloss.Color("#859900")
 
-	XXXLight = lipgloss.AdaptiveColor{Dark: "#FDF6E3", Light: "#002B36"} // base3
-	XXLight  = lipgloss.AdaptiveColor{Dark: "#EEE8D5", Light: "#073642"} // base2
-	XLight   = lipgloss.AdaptiveColor{Dark: "#93A1A1", Light: "#586E75"} // base1
-	Light    = lipgloss.AdaptiveColor{Dark: "#839496", Light: "#657B83"} // base0
-	Dark     = lipgloss.AdaptiveColor{Dark: "#657B83", Light: "#839496"} // base00
-	XDark    = lipgloss.AdaptiveColor{Dark: "#586E75", Light: "#93A1A1"} // base01
-	XXDark   = lipgloss.AdaptiveColor{Dark: "#073642", Light: "#EEE8D5"} // base02
-	XXXDark  = lipgloss.AdaptiveColor{Dark: "#002B36", Light: "#FDF6E3"} // base03
+	XXXLight = lipgloss.Color("7") // base3
+	XXLight  = lipgloss.Color("7") // base2
+	XLight   = lipgloss.Color("7") // base1
+	Light    = lipgloss.Color("7") // base0
+	Dark     = lipgloss.Color("7") // base00
+	XDark    = lipgloss.Color("7") // base01
+	XXDark   = lipgloss.Color("7") // base02
+	XXXDark  = lipgloss.Color("7") // base03
 )

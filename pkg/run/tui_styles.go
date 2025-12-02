@@ -145,9 +145,9 @@ func (m *tuiModel) styles(width, height int, focus focusArea) *styles {
 			out.headerLine = hr(out.menuWidth, true) + hr(out.logWidth, false)
 		}
 		out.footerLine = out.headerLine
-		out.includeInlineHelp = true
-		out.inlineHelpWidth, out.inlineHelpHeight = width-4, 2
-		out.menuHeight, out.logHeight = height-6, height-6
+		out.includeInlineHelp = false
+		out.inlineHelpWidth, out.inlineHelpHeight = width-4, 0
+		out.menuHeight, out.logHeight = height-4, height-4
 		out.headerLeft, out.headerRight = headerTall, headerTall
 		out.footer = footerTall
 	}

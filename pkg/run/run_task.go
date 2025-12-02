@@ -155,7 +155,7 @@ const (
 )
 
 const (
-	internalTaskInterleaved = "@interleaved"
+	internalTaskInterleaved = "@out"
 	internalTaskWatch       = "@watch"
 )
 
@@ -177,7 +177,12 @@ func (r *Run) IDs() []string {
 	if len(r.byWatch) > 0 {
 		ids = append(ids, internalTaskWatch)
 	}
-	return append(ids, r.tasks.IDs()...)
+	for _, id := range r.tasks.IDs() {
+		if !r.tasks.Get(id).Metadata().Hidden {
+			ids = append(ids, id)
+		}
+	}
+	return ids
 }
 
 // Tasks returns the Tasks that a Run would execute.
@@ -273,9 +278,11 @@ func (r *Run) Start(ctx context.Context, out MultiWriter) error {
 	}
 
 	start := func(ctx context.Context, id string) {
-		printf(id, logStyle, "starting")
 
 		t := r.tasks.Get(id)
+		if !t.Metadata().Hidden {
+			printf(id, logStyle, "starting")
+		}
 
 		// Mark that the task is running.
 		ctx, cancel := context.WithCancel(ctx)
@@ -356,10 +363,16 @@ func (r *Run) Start(ctx context.Context, out MultiWriter) error {
 				}
 				if len(invalidations) > 0 {
 					var ids []string
+					var idsToPrint []string
 					for id := range invalidations {
 						ids = append(ids, id)
+						if !r.Tasks().Get(id).Metadata().Hidden {
+							idsToPrint = append(idsToPrint, id)
+						}
 					}
-					printf(internalTaskWatch, logStyle, "invalidating {%s}", strings.Join(ids, ", "))
+					if len(idsToPrint) > 0 {
+						printf(internalTaskWatch, logStyle, "invalidating {%s}", strings.Join(idsToPrint, ", "))
+					}
 					go func() {
 						for _, id := range ids {
 							r.starts <- id
@@ -411,10 +424,16 @@ func (r *Run) Start(ctx context.Context, out MultiWriter) error {
 				// Send the invalidations.
 				if len(invalidations) > 0 {
 					var ids []string
+					var idsToPrint []string
 					for id := range invalidations {
 						ids = append(ids, id)
+						if !r.Tasks().Get(id).Metadata().Hidden {
+							idsToPrint = append(idsToPrint, id)
+						}
 					}
-					printf(id, logStyle, "invalidating {%s}", strings.Join(ids, ", "))
+					if len(idsToPrint) > 0 {
+						printf(internalTaskWatch, logStyle, "invalidating {%s}", strings.Join(idsToPrint, ", "))
+					}
 					go func() {
 						for _, id := range ids {
 							r.starts <- id

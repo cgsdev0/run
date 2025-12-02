@@ -3,6 +3,7 @@ package run
 import (
 	"context"
 	"io"
+	"strings"
 
 	"github.com/amonks/run/internal/mutex"
 	"github.com/amonks/run/pkg/logview"
@@ -76,10 +77,16 @@ func (w tuiWriter) Write(bs []byte) (int, error) {
 var _ UI = &tui{}
 
 func (a *tui) Start(ctx context.Context, ready chan<- struct{}, stdin io.Reader, stdout io.Writer) error {
+	var ids []string
+	for _, id := range a.run.IDs() {
+		if strings.HasPrefix(id, "@") || !a.run.Tasks().Get(id).Metadata().Hidden {
+			ids = append(ids, id)
+		}
+	}
 	program := tea.NewProgram(
 		&tuiModel{
 			tui:    a,
-			ids:    append([]string{internalTaskInterleaved}, a.run.IDs()...),
+			ids:    append([]string{internalTaskInterleaved}, ids...),
 			onInit: func() { ready <- struct{}{} },
 		},
 		tea.WithAltScreen(),

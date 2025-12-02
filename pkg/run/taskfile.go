@@ -107,6 +107,7 @@ type taskfileTask struct {
 	Dependencies []string `toml:"dependencies"`
 	Triggers     []string `toml:"triggers"`
 	Watch        []string `toml:"watch"`
+	Hidden       bool     `toml:"hidden"`
 
 	// CMD is the command to run. It runs in a new bash process, as in,
 	//     $ bash -c "$CMD"
@@ -151,5 +152,6 @@ func (t taskfileTask) toScriptTask() Task {
 		Dependencies: t.Dependencies,
 		Triggers:     t.Triggers,
 		Watch:        t.Watch,
+		Hidden:       t.Hidden,
 	})
 }

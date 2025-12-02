@@ -118,6 +118,8 @@ type TaskMetadata struct {
 	//  - `"./src/website/**/*.js"` watches for changes
 	//    to javascript files within src/website.
 	Watch []string
+	// the output from this task is hidden
+	Hidden bool
 }
 
 // IDs returns the task IDs in their canonical order.

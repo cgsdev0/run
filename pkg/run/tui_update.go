@@ -249,8 +249,10 @@ func (m *tuiModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 
 	case writeMsg:
-		lv := m.tasks[msg.key]
-		lv.Write(msg.content)
+		lv, ok := m.tasks[msg.key]
+		if ok {
+			lv.Write(msg.content)
+		}
 		return m, nil
 
 	case tea.WindowSizeMsg:

@@ -156,7 +156,6 @@ const (
 
 const (
 	internalTaskInterleaved = "@out"
-	internalTaskWatch       = "@watch"
 )
 
 // MultiWriter is the interface Runs use to display UI. To start a Run, you
@@ -174,9 +173,6 @@ type MultiWriter interface {
 // watchers.
 func (r *Run) IDs() []string {
 	var ids []string
-	if len(r.byWatch) > 0 {
-		ids = append(ids, internalTaskWatch)
-	}
 	for _, id := range r.tasks.IDs() {
 		if !r.tasks.Get(id).Metadata().Hidden {
 			ids = append(ids, id)
@@ -239,7 +235,6 @@ func (r *Run) Start(ctx context.Context, out MultiWriter) error {
 	fsevents := make(chan evFSEvent)
 	for _, p := range r.watchedPaths() {
 		watchP := filepath.Join(r.getDir(), p)
-		printf(internalTaskWatch, logStyle, "watching %s", watchP)
 		p := p
 		c, stop, err := watcher.watch(watchP)
 		if err != nil {
@@ -356,22 +351,14 @@ func (r *Run) Start(ctx context.Context, out MultiWriter) error {
 		for {
 			select {
 			case ev := <-fsevents:
-				printf(internalTaskWatch, logStyle, ev.print())
 				invalidations := map[string]struct{}{}
 				for _, id := range r.byWatch[ev.path] {
 					invalidations[id] = struct{}{}
 				}
 				if len(invalidations) > 0 {
 					var ids []string
-					var idsToPrint []string
 					for id := range invalidations {
 						ids = append(ids, id)
-						if !r.Tasks().Get(id).Metadata().Hidden {
-							idsToPrint = append(idsToPrint, id)
-						}
-					}
-					if len(idsToPrint) > 0 {
-						printf(internalTaskWatch, logStyle, "invalidating {%s}", strings.Join(idsToPrint, ", "))
 					}
 					go func() {
 						for _, id := range ids {
@@ -424,15 +411,8 @@ func (r *Run) Start(ctx context.Context, out MultiWriter) error {
 				// Send the invalidations.
 				if len(invalidations) > 0 {
 					var ids []string
-					var idsToPrint []string
 					for id := range invalidations {
 						ids = append(ids, id)
-						if !r.Tasks().Get(id).Metadata().Hidden {
-							idsToPrint = append(idsToPrint, id)
-						}
-					}
-					if len(idsToPrint) > 0 {
-						printf(internalTaskWatch, logStyle, "invalidating {%s}", strings.Join(idsToPrint, ", "))
 					}
 					go func() {
 						for _, id := range ids {

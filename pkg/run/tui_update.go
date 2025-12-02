@@ -114,8 +114,11 @@ func (m *tuiModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, nil
 
 		case "/":
-			m.focus = focusSearch
-			lv.SetFocus(logview.FocusSearchBar)
+			if m.focus != focusSearch {
+				m.focus = focusSearch
+				lv.SetFocus(logview.FocusSearchBar)
+				lv.SetQuery("")
+			}
 			return m, nil
 
 		case "n":

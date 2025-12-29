@@ -30,7 +30,7 @@ func (m *tuiModel) View() string {
 		sections = append(sections, m.renderHeader(styles))
 	}
 	sections = append(sections, lipgloss.JoinHorizontal(lipgloss.Top,
-		m.renderMenu(styles),
+		// m.renderMenu(styles),
 		zone.Mark(uiZoneLogs, m.renderLog(styles)),
 	))
 	if styles.includeFooter {

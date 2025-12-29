@@ -25,16 +25,16 @@ func (m *tuiModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m.passthroughToHelp(msg)
 		}
 
-		if msg.Button == tea.MouseButtonLeft {
-			for i, id := range m.ids {
-				if zone.Get(id).InBounds(msg) {
-					m.selectedTaskIDIndex = i
-					m.focus = focusMenu
-					return m, nil
-				}
-			}
-			return m, nil
-		}
+		// if msg.Button == tea.MouseButtonLeft {
+		// 	for i, id := range m.ids {
+		// 		if zone.Get(id).InBounds(msg) {
+		// 			m.selectedTaskIDIndex = i
+		// 			m.focus = focusMenu
+		// 			return m, nil
+		// 		}
+		// 	}
+		// 	return m, nil
+		// }
 
 		if zone.Get(uiZoneLogs).InBounds(msg) {
 			return m.passthroughToLogview(msg)
@@ -61,7 +61,7 @@ func (m *tuiModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		if m.focus == focusHelp {
 			switch msg.String() {
 			case "h", "?", "esc", "q":
-				m.focus = focusMenu
+				m.focus = focusLogs
 				return m, nil
 			default:
 				newHelp, cmd := m.help.Update(msg)
@@ -103,8 +103,8 @@ func (m *tuiModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			// deselecting a log.
 			switch m.focus {
 			case focusLogs:
-				m.focus = focusMenu
-			case focusMenu:
+				// m.focus = focusMenu
+				// case focusMenu:
 				return m.handleQuitAttempt(msg.String())
 			}
 			return m, nil
@@ -132,8 +132,8 @@ func (m *tuiModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "tab":
 			// toggle between logs and the menu.
 			switch m.focus {
-			case focusLogs:
-				m.focus = focusMenu
+			// case focusLogs:
+			// 	m.focus = focusMenu
 			case focusMenu:
 				m.focus = focusLogs
 			}
@@ -146,12 +146,12 @@ func (m *tuiModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 			return m, nil
 
-		case "h":
-			switch m.focus {
-			case focusLogs:
-				m.focus = focusMenu
-			}
-			return m, nil
+		// case "h":
+		// 	switch m.focus {
+		// 	case focusLogs:
+		// 		m.focus = focusMenu
+		// 	}
+		// 	return m, nil
 
 		case "w":
 			lv.ToggleWrapMode()

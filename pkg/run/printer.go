@@ -6,9 +6,7 @@ import (
 	"io"
 	"strings"
 
-	"github.com/amonks/run/internal/color"
 	"github.com/amonks/run/internal/mutex"
-	"github.com/charmbracelet/lipgloss"
 )
 
 func newPrinter(run *Run) UI {
@@ -72,30 +70,16 @@ func (p *printer) Write(key, message string) {
 		if l == "" {
 			continue
 		}
-		k := ""
 		space := ""
 		if key != p.lastKey {
 			if p.lastKey != "" {
 				space = "\n"
 			}
-			k, p.lastKey = key, key
+			p.lastKey = key
 		}
-		keyStyle := keyStyle
-		keyStyle = keyStyle.Foreground(color.Hash(key))
 		if p.stdout == nil {
 			panic("nil stdout")
 		}
-		fmt.Fprintln(p.stdout, space+lipgloss.JoinHorizontal(
-			lipgloss.Top,
-			keyStyle.Width(p.keyLength).Render(k),
-			l,
-		))
+		fmt.Fprintln(p.stdout, space+l)
 	}
 }
-
-var (
-	keyStyle = lipgloss.NewStyle().
-		Height(1).
-		Align(lipgloss.Right).
-		Margin(0, 2)
-)

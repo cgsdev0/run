@@ -146,8 +146,8 @@ type tuiModel struct {
 type focusArea int
 
 const (
-	focusMenu focusArea = iota
-	focusLogs
+	focusLogs focusArea = iota
+	focusMenu
 	focusHelp
 	focusSearch
 )

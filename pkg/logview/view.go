@@ -188,7 +188,7 @@ func (m *Model) RenderLog(width, height int) string {
 }
 
 func (m *Model) wrapLine(line string, maxLines, width int) (string, int) {
-	if m.shouldHardwrap {
+	if !m.shouldHardwrap {
 		wrapped := truncate.String(line, uint(width))
 		return wrapped, 1
 	} else {

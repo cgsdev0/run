@@ -208,9 +208,9 @@ var (
 )
 
 func hr(width int, emphasize bool) string {
-	if emphasize {
-		return lipgloss.NewStyle().Foreground(color.Yellow).Render(strings.Repeat("─", width))
-	} else {
-		return lipgloss.NewStyle().Foreground(color.XDark).Render(strings.Repeat("─", width))
-	}
+	// if emphasize {
+	return lipgloss.NewStyle().Foreground(color.Yellow).Render(strings.Repeat("─", width))
+	// } else {
+	// 	return lipgloss.NewStyle().Foreground(color.XDark).Render(strings.Repeat("─", width))
+	// }
 }
